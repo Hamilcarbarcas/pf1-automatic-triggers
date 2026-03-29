@@ -1,0 +1,32 @@
+{
+  "id": "pf1-automatic-triggers",
+  "title": "PF1e Automatic Triggers",
+  "description": "Automatically execute actions on items when combat events occur. Supports combat start/end, turn start/end, and round start triggers with configurable actions (use, toggle, on, off, delete).",
+  "authors": [
+    {
+      "name": "Patrick",
+      "flags": {}
+    }
+  ],
+  "version": "1.0.0",
+  "url": "https://github.com/Hamilcarbarcas/pf1-automatic-triggers",
+  "readme": "https://github.com/Hamilcarbarcas/pf1-automatic-triggers/blob/main/README.md",
+  "bugs": "https://github.com/Hamilcarbarcas/pf1-automatic-triggers/issues",
+  "manifest": "https://github.com/Hamilcarbarcas/pf1-automatic-triggers/releases/latest/download/module.json",
+  "download": "https://github.com/Hamilcarbarcas/pf1-automatic-triggers/releases/download/v1.0.0/module.zip",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "pf1",
+        "type": "system"
+      }
+    ]
+  },
+  "scripts": [
+    "scripts/automatic-triggers.mjs"
+  ]
+}
