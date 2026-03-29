@@ -24,7 +24,6 @@ A Foundry VTT module for the PF1 system that automatically executes actions on i
 
 - **Multiple Triggers**: A single item can have triggers for multiple events
 - **GM-Only Processing**: All trigger logic runs on the GM client to avoid duplicate execution
-- **Batched Deletes**: Multiple items marked for deletion are removed in a single operation per actor
 
 ## Usage
 
@@ -82,8 +81,8 @@ await item.setFlag("pf1-automatic-triggers", "triggers", {
 
 | Action | Effect |
 |---|---|
-| `use` | Uses the item (full use flow — script calls, chat output, charge deduction) |
-| `toggle` | Flips the item's active state (on→off, off→on) |
+| `use` | Uses the item |
+| `toggle` | Toggles the item's active state |
 | `on` | Sets the item to active |
 | `off` | Sets the item to inactive |
 | `delete` | Removes the item from the actor |
