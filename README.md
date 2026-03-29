@@ -1,6 +1,6 @@
 # PF1e Automatic Triggers
 
-A Foundry VTT module for the PF1 system that automatically executes actions on items when combat lifecycle events occur. Set flags on any item to have it respond to combat start, combat end, turn changes, or new rounds.
+A Foundry VTT module for the PF1 system that automatically executes actions on items when combat lifecycle events occur. 
 
 **Version:** 1.0.0  
 **Foundry VTT Compatibility:** v13  
@@ -16,76 +16,91 @@ A Foundry VTT module for the PF1 system that automatically executes actions on i
   - **Round Start** — When a new round begins (affects all combatants)
 
 - **Configurable Actions**: Each trigger can perform one of five actions:
-  - **`use`** — Deduct one charge from the item
+  - **`use`** — Uses the item (full use flow — script calls, chat output, charge deduction)
   - **`toggle`** — Flip the item's active state
   - **`on`** — Activate the item
   - **`off`** — Deactivate the item
   - **`delete`** — Remove the item from the actor
 
-- **Multiple Triggers**: A single item can have triggers for multiple events
+- **Multiple Triggers**: A single item can have flags for multiple events
 - **GM-Only Processing**: All trigger logic runs on the GM client to avoid duplicate execution
 
 ## Usage
 
-### Setting Triggers via Macro or Script
+### Setting Triggers via the Item Sheet
 
-Triggers are stored as flags on items. Use `setFlag` to configure them:
+1. Open the item in the PF1 item sheet
+2. Go to the **Advanced** tab
+3. Add a **boolean flag** with the name `{trigger}_{action}`
+
+For example, adding the boolean flag `onCombatEnd_delete` will delete the item when combat ends.
+
+### Flag Name Format
+
+Flags follow the pattern: **`{trigger}_{action}`**
+
+### Trigger + Action Reference
+
+| Boolean Flag Name | When | What It Does |
+|---|---|---|
+| `onCombatStart_use` | Combat begins | Uses the item |
+| `onCombatStart_toggle` | Combat begins | Toggles active state |
+| `onCombatStart_on` | Combat begins | Activates the item |
+| `onCombatStart_off` | Combat begins | Deactivates the item |
+| `onCombatStart_delete` | Combat begins | Deletes the item |
+| `onCombatEnd_use` | Combat ends | Uses the item |
+| `onCombatEnd_toggle` | Combat ends | Toggles active state |
+| `onCombatEnd_on` | Combat ends | Activates the item |
+| `onCombatEnd_off` | Combat ends | Deactivates the item |
+| `onCombatEnd_delete` | Combat ends | Deletes the item |
+| `onTurnStart_use` | Actor's turn begins | Uses the item |
+| `onTurnStart_toggle` | Actor's turn begins | Toggles active state |
+| `onTurnStart_on` | Actor's turn begins | Activates the item |
+| `onTurnStart_off` | Actor's turn begins | Deactivates the item |
+| `onTurnStart_delete` | Actor's turn begins | Deletes the item |
+| `onTurnEnd_use` | Actor's turn ends | Uses the item |
+| `onTurnEnd_toggle` | Actor's turn ends | Toggles active state |
+| `onTurnEnd_on` | Actor's turn ends | Activates the item |
+| `onTurnEnd_off` | Actor's turn ends | Deactivates the item |
+| `onTurnEnd_delete` | Actor's turn ends | Deletes the item |
+| `onRoundStart_use` | New round begins | Uses the item |
+| `onRoundStart_toggle` | New round begins | Toggles active state |
+| `onRoundStart_on` | New round begins | Activates the item |
+| `onRoundStart_off` | New round begins | Deactivates the item |
+| `onRoundStart_delete` | New round begins | Deletes the item |
+
+### Setting Triggers via Script/Macro
+
+You can also add boolean flags programmatically:
 
 ```js
 // Delete a buff when combat ends
-await item.setFlag("pf1-automatic-triggers", "triggers", {
-  onCombatEnd: "delete"
-});
+await item.addItemBooleanFlag("onCombatEnd_delete");
 
-// Deduct a charge each turn and delete when combat ends
-await item.setFlag("pf1-automatic-triggers", "triggers", {
-  onTurnStart: "use",
-  onCombatEnd: "delete"
-});
-
-// Toggle a buff on/off at the start of the actor's turn
-await item.setFlag("pf1-automatic-triggers", "triggers", {
-  onTurnStart: "toggle"
-});
+// Use the item at the start of the owner's turn
+await item.addItemBooleanFlag("onTurnStart_use");
 
 // Activate at combat start, deactivate at combat end
-await item.setFlag("pf1-automatic-triggers", "triggers", {
-  onCombatStart: "on",
-  onCombatEnd: "off"
-});
+await item.addItemBooleanFlag("onCombatStart_on");
+await item.addItemBooleanFlag("onCombatEnd_off");
 ```
 
 ### Removing Triggers
 
 ```js
-// Remove all triggers from an item
-await item.unsetFlag("pf1-automatic-triggers", "triggers");
-
-// Remove a single trigger (set it to null)
-await item.setFlag("pf1-automatic-triggers", "triggers", {
-  onTurnStart: null
-});
+await item.removeItemBooleanFlag("onCombatEnd_delete");
 ```
 
-### Trigger Reference
+### Common Recipes
 
-| Flag Key | Event | Scope |
-|---|---|---|
-| `onCombatStart` | Combat begins | All combatant actors |
-| `onCombatEnd` | Combat tracker is deleted | All combatant actors |
-| `onTurnStart` | A combatant's turn begins | That actor only |
-| `onTurnEnd` | A combatant's turn ends | That actor only |
-| `onRoundStart` | A new round begins | All combatant actors |
+**Temporary buff that lasts one encounter:**
+Add boolean flag `onCombatEnd_delete` — the buff will be automatically removed when the GM ends combat.
 
-### Action Reference
+**Per-turn resource consumption:**
+Add boolean flag `onTurnStart_use` — the item will be used at the start of each of the actor's turns.
 
-| Action | Effect |
-|---|---|
-| `use` | Uses the item |
-| `toggle` | Toggles the item's active state |
-| `on` | Sets the item to active |
-| `off` | Sets the item to inactive |
-| `delete` | Removes the item from the actor |
+**Combat-only buff:**
+Add boolean flags `onCombatStart_on` and `onCombatEnd_off` — the buff activates when combat starts and deactivates when it ends.
 
 ## Compatibility
 
