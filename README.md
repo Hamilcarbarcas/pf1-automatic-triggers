@@ -1,4 +1,4 @@
-# PF1e Automatic Triggers
+# PF1 Automatic Triggers
 
 A Foundry VTT module for the PF1 system that automatically executes actions on items when combat lifecycle events occur. 
 
