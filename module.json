@@ -4,7 +4,7 @@
   "description": "Automatically execute actions on items when combat events occur. Supports combat start/end, turn start/end, and round start triggers with configurable actions (use, toggle, on, off, delete).",
   "authors": [
     {
-      "name": "Patrick",
+      "name": "Hamilcarbarcas",
       "flags": {}
     }
   ],
