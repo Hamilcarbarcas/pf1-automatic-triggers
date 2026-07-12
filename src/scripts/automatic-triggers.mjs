@@ -115,6 +115,13 @@ Hooks.once("ready", () => {
 
   /** Safely run processTriggers, catching and logging any errors. */
   function safeTrigger(actors, triggerKey) {
+    // Only the primary (active) GM processes triggers. Every GM client
+    // registers these hooks, but game.users.activeGM resolves to a single
+    // GM, so this avoids duplicate execution when >1 GM is connected.
+    if (!game.users.activeGM?.isSelf) {
+      log(`Not the active GM — skipping "${triggerKey}".`);
+      return;
+    }
     processTriggers(actors, triggerKey).catch(err => {
       warn(`Error processing "${triggerKey}":`, err);
     });
@@ -193,6 +200,9 @@ Hooks.once("ready", () => {
   /* ---- Round Start ---- */
   Hooks.on("combatRound", (combat, updateData, updateOptions) => {
     log("Hook: combatRound — round:", updateData?.round, "direction:", updateOptions?.direction);
+    // Only fire on forward advancement; ignore round rewinds so triggers
+    // don't re-fire when the GM steps combat backward.
+    if (updateOptions?.direction < 0) return;
     const actors = getCombatActors(combat);
     safeTrigger(actors, "onRoundStart");
   });
